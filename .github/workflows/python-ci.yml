@@ -1,0 +1,42 @@
+The error "YAML file does not conform to schema: Unexpected value" is caused by an indentation error.  Specifically, the `- name: Lint with flake8` step is incorrectly indented.  It should be at the same level as the `- name: Install dependencies` step, both being children of the `steps` key.
+
+Here's the corrected YAML:
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 pytest
+
+      - name: Lint with flake8
+        run: |
+          flake8 .
+          # Exit with non-zero status if flake8 finds errors.
+          flake8 --count . | grep -E "^[0-9]+:" | awk '{ exit 1 }' || true
+
+      - name: Run tests with pytest
+        run: pytest
+
+      - name: Deploy (mocked)
+        run: echo "Deployment successful (mocked)"
+
+The key change is removing the extra indentation before `- name: Lint with flake8`.  Make sure all steps under the `steps` key are consistently indented (usually two spaces).  YAML is very sensitive to indentation.  Using a YAML linter can help prevent these types of errors in the future.
