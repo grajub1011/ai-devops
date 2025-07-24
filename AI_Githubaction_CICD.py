@@ -5,7 +5,7 @@ import google.generativeai as genai
  
 load_dotenv()
 print("os.getenv('GOOGLE_API_KEY')====", os.getenv('GOOGLE_API_KEY'))
-genai.configure(api_key='AIzaSyB5tSq0xkGoTsr885FSDU-QY4Xx3J1Rj5c')
+genai.configure(api_key='your google api key')
 client = genai.GenerativeModel("gemini-1.5-flash")
 
 # Load API key from .env file
